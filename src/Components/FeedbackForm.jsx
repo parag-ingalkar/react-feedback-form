@@ -6,12 +6,33 @@ const FeedbackForm = () => {
     const [formData, setFormData] = useState({
         name:'',
         email:'',
-        feedback:''
+        feedback:'',
+        rating:''
     });
 
     const handleChange = (event) => {
-        const {name:value} = event.target;
+        const {name, value} = event.target;
         setFormData({...formData, [name]:value});
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const confirmationMessage = `
+        Name: ${formData.name}
+        Email: ${formData.email}
+        Feedback: ${formData.feedback}
+        Rating: ${formData.rating}`;
+        const isConfirmed = window.confirm(`Please confirm your details:\n\n${confirmationMessage}`);
+        if (isConfirmed){
+            console.log('Submitting feedback:', formData);
+            setFormData({
+              name: '',
+              email: '',
+              feedback: '',
+              rating: ''
+            });
+            alert('Thank you for your valuable feedback!');
+        }
     };
 
   return (
@@ -19,7 +40,7 @@ const FeedbackForm = () => {
     <nav>
     Tell Us What You Think
     </nav>
-      <form className="feedback-form">
+      <form className="feedback-form" onSubmit={handleSubmit}>
         <h2>We'd Love to Hear From You!</h2>
         <p>Please share your feedback with us.</p>
         <input type='text'
@@ -36,6 +57,14 @@ const FeedbackForm = () => {
         placeholder='Your Feedback'
         value={formData.feedback}
         onChange={handleChange}/>
+                 <div style={{display:'flex',gap:'10px',flexDirection:'column'}}>
+                    <span>Rate Us:</span>
+                    {
+                        [1,2,3,4,5].map((rating)=>(
+                            <p key={rating}><input type="radio" name="rating" value={rating} onChange={handleChange}/>{rating}</p>
+                        ))
+                    }
+                  </div>
         <button type='submit'>Submit Feedback </button> 
       </form>
     </>
